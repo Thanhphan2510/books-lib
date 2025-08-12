@@ -1,76 +1,71 @@
 #!/bin/bash
+VALKEY_CLI="valkey-cli"
 
-# Test all Valkey data types and features
-echo "=== Valkey Data Type Test Script ==="
+# Unique key prefix to avoid conflicts
+PREFIX="test:$(date +%s):"
 
-# Connect to Valkey (default: localhost:6379)
-VALKEY_CLI="redis-cli"
+echo "=== Valkey Data Type Tests with Expiration ==="
 
-# 1. String Tests
-echo -e "\n\033[1;32m[STRING TESTS]\033[0m"
-$VALKEY_CLI set my_string "Hello Valkey"
-$VALKEY_CLI get my_string
-$VALKEY_CLI incr counter
-$VALKEY_CLI incr counter
-$VALKEY_CLI get counter
+# 1. String with expiration
+echo -e "\n\033[1;32m[STRING TEST]\033[0m"
+$VALKEY_CLI set "${PREFIX}string_key" "hello" ex 3
+$VALKEY_CLI ttl "${PREFIX}string_key"
 
-# 2. Hash Tests
-echo -e "\n\033[1;32m[HASH TESTS]\033[0m"
-$VALKEY_CLI hset user:1000 name "John Doe" email "john@valkey.io" age 30
-$VALKEY_CLI hgetall user:1000
-$VALKEY_CLI hincrby user:1000 age 1
-$VALKEY_CLI hexpire user:1000 email 300  # Valkey-specific: expire email field in 300s
+# 2. Hash with field expiration (Valkey special)
+echo -e "\n\033[1;32m[HASH TEST]\033[0m"
+$VALKEY_CLI hset "${PREFIX}user" name "John" age 30
+$VALKEY_CLI hexpire "${PREFIX}user" age 5  # Valkey-specific field expiration
+$VALKEY_CLI hgetall "${PREFIX}user"
+echo "TTL for age field: $(valkey-cli httl ${PREFIX}user age)"
 
-# 3. List Tests
-echo -e "\n\033[1;32m[LIST TESTS]\033[0m"
-$VALKEY_CLI rpush my_list "A" "B" "C"
-$VALKEY_CLI lrange my_list 0 -1
-$VALKEY_CLI lpop my_list
-$VALKEY_CLI rpop my_list
+# 3. List with expiration
+echo -e "\n\033[1;32m[LIST TEST]\033[0m"
+$VALKEY_CLI rpush "${PREFIX}list" A B C ex 10
+$VALKEY_CLI lrange "${PREFIX}list" 0 -1
+echo "List TTL: $(valkey-cli ttl ${PREFIX}list)"
 
-# 4. Set Tests
-echo -e "\n\033[1;32m[SET TESTS]\033[0m"
-$VALKEY_CLI sadd primes 2 3 5 7 11
-$VALKEY_CLI smembers primes
-$VALKEY_CLI sadd odds 1 3 5 7 9
-$VALKEY_CLI sinter primes odds
+# 4. Set with expiration
+echo -e "\n\033[1;32m[SET TEST]\033[0m"
+$VALKEY_CLI sadd "${PREFIX}set" Apple Banana Cherry ex 15
+$VALKEY_CLI smembers "${PREFIX}set"
+echo "Set TTL: $(valkey-cli ttl ${PREFIX}set)"
 
-# 5. Sorted Set Tests
-echo -e "\n\033[1;32m[SORTED SET TESTS]\033[0m"
-$VALKEY_CLI zadd leaderboard 100 "PlayerA" 200 "PlayerB" 150 "PlayerC"
-$VALKEY_CLI zrange leaderboard 0 -1 withscores
-$VALKEY_CLI zrevrange leaderboard 0 1 withscores
+# 5. Sorted Set with expiration
+echo -e "\n\033[1;32m[SORTED SET TEST]\033[0m"
+$VALKEY_CLI zadd "${PREFIX}zset" 100 "PlayerA" 200 "PlayerB" ex 20
+$VALKEY_CLI zrange "${PREFIX}zset" 0 -1 withscores
+echo "ZSet TTL: $(valkey-cli ttl ${PREFIX}zset)"
 
-# 6. Pub/Sub Tests
-echo -e "\n\033[1;32m[PUB/SUB TESTS]\033[0m"
-# Run pub/sub in background
+# 6. Pub/Sub with timeout
+echo -e "\n\033[1;32m[PUB/SUB TEST]\033[0m"
 (
-  sleep 1
-  $VALKEY_CLI publish news "Valkey 7.2.8 released!"
+  $VALKEY_CLI subscribe "${PREFIX}news" | head -n 6
 ) &
-$VALKEY_CLI subscribe news | head -n 4
+sleep 0.5
+$VALKEY_CLI publish "${PREFIX}news" "Breaking news!" &> /dev/null
+$VALKEY_CLI publish "${PREFIX}news" "Valkey 7.2.8 released!" &> /dev/null
 
-# 7. Lua Script Tests
-echo -e "\n\033[1;32m[LUA SCRIPT TESTS]\033[0m"
+# 7. Lua Script with expiration
+echo -e "\n\033[1;32m[LUA SCRIPT TEST]\033[0m"
 $VALKEY_CLI --eval <(echo '
   local key = KEYS[1]
-  local value = ARGV[1]
-  redis.call("SET", key, value)
+  local ttl = tonumber(ARGV[1])
+  redis.call("SET", key, "Lua-generated", "EX", ttl)
   return redis.call("GET", key)
-') my_script_key , "Lua is powerful!"
+') "${PREFIX}lua_key" , 25
 
-# 8. Stream Tests
-echo -e "\n\033[1;32m[STREAM TESTS]\033[0m"
-$VALKEY_CLI xadd mystream * sensor-id 1234 temp 19.8
-$VALKEY_CLI xadd mystream * sensor-id 5678 temp 22.1
-$VALKEY_CLI xrange mystream - +
+# 8. Streams with expiration
+echo -e "\n\033[1;32m[STREAM TEST]\033[0m"
+$VALKEY_CLI xadd "${PREFIX}stream" * sensor-id 1234 temp 19.8
+$VALKEY_CLI xadd "${PREFIX}stream" * sensor-id 5678 temp 22.1
+$VALKEY_CLI expire "${PREFIX}stream" 30
+$VALKEY_CLI xlen "${PREFIX}stream"
+echo "Stream TTL: $(valkey-cli ttl ${PREFIX}stream)"
 
-# 9. Valkey-specific Features
-echo -e "\n\033[1;32m[VALKEY-SPECIFIC TESTS]\033[0m"
-$VALKEY_CLI ACL SETUSER test-user +@all -DEBUG > /dev/null
-$VALKEY_CLI --user test-user ping
-$VALKEY_CLI FT.CREATE myIdx SCHEMA title TEXT WEIGHT 5.0 | head -n 2
+# 9. Print all test keys
+echo -e "\n\033[1;35mAll test keys (will expire automatically):\033[0m"
+$VALKEY_CLI keys "${PREFIX}*"
 
-# Cleanup
-$VALKEY_CLI flushall > /dev/null
-echo -e "\n\033[1;35mAll tests completed. Data cleared.\033[0m"
+echo -e "\n\033[1;36mTests completed! Existing data preserved.\033[0m"
+echo "Test keys with prefix: ${PREFIX}"
+echo "Run 'valkey-cli keys \"${PREFIX}*\"' to monitor expiration"
