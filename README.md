@@ -1,3 +1,4 @@
+https://drive.google.com/file/d/14bp--s18AjqgVB4ckMsiQddIoa-oy7p1/view?usp=drive_link
 #!/bin/bash
 
 # Cấu hình
