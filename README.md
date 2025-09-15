@@ -1,76 +1,100 @@
-https://drive.google.com/file/d/14bp--s18AjqgVB4ckMsiQddIoa-oy7p1/view?usp=drive_link
 #!/bin/bash
 
-# Cấu hình
-SENTINEL_PORT=7000
-MASTER_NAME="scpmmaster"
-SENTINEL_HOST="localhost"  # Thay đổi nếu Sentinel ở host khác
-CHECK_INTERVAL=2           # Thời gian giữa các lần kiểm tra (giây)
-MAX_RETRIES=3              # Số lần thử ping tối đa trước khi xem là lỗi
+# Configuration
+VALKEY_HOST="${VALKEY_HOST:-localhost}"
+VALKEY_PORT="${VALKEY_PORT:-6379}"
+VALKEY_PASSWORD="${VALKEY_PASSWORD:-}"
+MAX_OFFSET_DIFF="${MAX_OFFSET_DIFF:-100}"  # Maximum allowed offset difference
 
-# Hàm lấy địa chỉ master từ Sentinel
-get_master_address() {
-    local result
-    result=$(redis-cli -h $SENTINEL_HOST -p $SENTINEL_PORT SENTINEL get-master-addr-by-name $MASTER_NAME 2>&1)
+# Function to execute Valkey commands
+valkey_cmd() {
+    local cmd="$1"
+    if [ -z "$VALKEY_PASSWORD" ]; then
+        valkey-cli -h "$VALKEY_HOST" -p "$VALKEY_PORT" "$cmd"
+    else
+        valkey-cli -h "$VALKEY_HOST" -p "$VALKEY_PORT" -a "$VALKEY_PASSWORD" "$cmd"
+    fi
+}
+
+# Function to extract value from INFO output
+get_info_value() {
+    echo "$1" | grep "^$2:" | cut -d ':' -f2 | tr -d '\r'
+}
+
+# Get replication info
+REPLICATION_INFO=$(valkey_cmd "INFO replication")
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to connect to Valkey at $VALKEY_HOST:$VALKEY_PORT"
+    exit 1
+fi
+
+# Parse replication information
+ROLE=$(get_info_value "$REPLICATION_INFO" "role")
+
+if [ "$ROLE" = "master" ]; then
+    # Master node - check connected replicas
+    CONNECTED_SLAVES=$(get_info_value "$REPLICATION_INFO" "connected_slaves")
     
-    if [ $? -ne 0 ]; then
-        echo "ERROR: Cannot connect to Sentinel: $result" >&2
-        return 1
+    if [ -z "$CONNECTED_SLAVES" ] || [ "$CONNECTED_SLAVES" -eq 0 ]; then
+        echo "WARNING: Master has no connected replicas"
+        exit 0
     fi
     
-    echo "$result" | head -n1 | tr -d '"'
-}
-
-# Hàm kiểm tra kết nối Redis
-ping_redis() {
-    local ip=$1
-    local port=$2
-    redis-cli -h $ip -p $port PING >/dev/null 2>&1
-    return $?
-}
-
-# Main loop
-CURRENT_MASTER=""
-while true; do
-    # Lấy địa chỉ master mới nếu chưa có
-    if [ -z "$CURRENT_MASTER" ]; then
-        echo "Getting master address from Sentinel..."
-        MASTER_IP=$(get_master_address)
-        if [ $? -ne 0 ]; then
-            echo "Will retry in $CHECK_INTERVAL seconds..."
-            sleep $CHECK_INTERVAL
+    # Get master offset
+    MASTER_OFFSET=$(get_info_value "$REPLICATION_INFO" "master_repl_offset")
+    
+    # Check each replica
+    ALL_SYNCED=true
+    for ((i=0; i<CONNECTED_SLAVES; i++)); do
+        SLAVE_INFO=$(get_info_value "$REPLICATION_INFO" "slave$i")
+        SLAVE_OFFSET=$(echo "$SLAVE_INFO" | grep -o 'offset=[0-9]*' | cut -d '=' -f2)
+        SLAVE_HOST=$(echo "$SLAVE_INFO" | grep -o 'ip=[^,]*' | cut -d '=' -f2)
+        SLAVE_PORT=$(echo "$SLAVE_INFO" | grep -o 'port=[0-9]*' | cut -d '=' -f2)
+        
+        if [ -z "$SLAVE_OFFSET" ]; then
+            echo "ERROR: Could not get offset for replica $SLAVE_HOST:$SLAVE_PORT"
+            ALL_SYNCED=false
             continue
         fi
         
-        CURRENT_MASTER=$MASTER_IP
-        echo "Current master: $CURRENT_MASTER"
-    fi
-
-    # Kiểm tra kết nối đến master
-    retries=0
-    while [ $retries -lt $MAX_RETRIES ]; do
-        if ping_redis $CURRENT_MASTER 6379; then
-            echo "$(date): Successfully pinged master $CURRENT_MASTER"
-            break
+        OFFSET_DIFF=$((MASTER_OFFSET - SLAVE_OFFSET))
+        
+        if [ "$OFFSET_DIFF" -le "$MAX_OFFSET_DIFF" ]; then
+            echo "OK: Replica $SLAVE_HOST:$SLAVE_PORT is synced (offset diff: $OFFSET_DIFF)"
         else
-            echo "$(date): Failed to ping master $CURRENT_MASTER (attempt $((retries+1))/$MAX_RETRIES)"
-            ((retries++))
-            sleep 1
+            echo "WARNING: Replica $SLAVE_HOST:$SLAVE_PORT is lagging (offset diff: $OFFSET_DIFF)"
+            ALL_SYNCED=false
         fi
     done
-
-    # Nếu vẫn fail sau max retries
-    if [ $retries -eq $MAX_RETRIES ]; then
-        echo "Master $CURRENT_MASTER is unreachable. Getting new master from Sentinel..."
-        NEW_MASTER=$(get_master_address)
-        
-        if [ $? -eq 0 ] && [ "$NEW_MASTER" != "$CURRENT_MASTER" ]; then
-            echo "Master changed from $CURRENT_MASTER to $NEW_MASTER"
-            CURRENT_MASTER=$NEW_MASTER
-        else
-            echo "Failed to get new master or master unchanged. Will retry..."
-        fi
+    
+    if [ "$ALL_SYNCED" = true ]; then
+        echo "SUCCESS: All replicas are synchronized with master"
+        exit 0
+    else
+        echo "ERROR: Some replicas are not synchronized"
+        exit 1
     fi
 
-    sleep $CHECK_INTERVAL
-done
+elif [ "$ROLE" = "slave" ]; then
+    # Slave node - check sync status with master
+    MASTER_OFFSET=$(get_info_value "$REPLICATION_INFO" "master_repl_offset")
+    SLAVE_OFFSET=$(valkey_cmd "INFO replication" | grep "slave_repl_offset" | cut -d ':' -f2 | tr -d '\r')
+    
+    if [ -z "$MASTER_OFFSET" ] || [ -z "$SLAVE_OFFSET" ]; then
+        echo "ERROR: Could not retrieve offset information"
+        exit 1
+    fi
+    
+    OFFSET_DIFF=$((MASTER_OFFSET - SLAVE_OFFSET))
+    
+    if [ "$OFFSET_DIFF" -le "$MAX_OFFSET_DIFF" ]; then
+        echo "SUCCESS: Replica is synced with master (offset diff: $OFFSET_DIFF)"
+        exit 0
+    else
+        echo "WARNING: Replica is lagging behind master (offset diff: $OFFSET_DIFF)"
+        exit 1
+    fi
+else
+    echo "ERROR: Unknown role '$ROLE'"
+    exit 1
+fi
