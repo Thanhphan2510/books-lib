@@ -1,32 +1,29 @@
 #!/bin/sh
 
 # =========================================================================
-# Optimized Script: check_k8s_pod_logs.sh
+# Script: check_k8s_pod_logs.sh (optimized with manifest)
 # Description: 
-#   1. Checks logs of running pods in namespaces (default, app, backend)
-#      using path: /wrkdata/{ns}-*/{pod}.log
-#   2. Also checks explicit special log files.
-#   3. Uses byte offsets (stored) and `tail -c` for efficient incremental reads.
-#   4. PATTERNS is a pipe-separated list (e.g., "error|timeout|fatal").
-#   5. Writes to OUTPUT_LOG only when any pattern occurs >= THRESHOLD times.
-#   6. If OUTPUT_LOG is empty, prints all matches to stdout (always).
-# Cron: */5 * * * * /path/to/check_k8s_pod_logs.sh
+#   - Checks logs of running pods using path /wrkdata/{ns}-*/{pod}.log
+#   - Uses hash-based offset files (stored in OFFSET_DIR)
+#   - Maintains manifest.txt to map hash -> original log path
+#   - Only writes to OUTPUT_LOG when any pattern occurs >= THRESHOLD times
 # =========================================================================
 
 # ----------------------------- Configuration ----------------------------------
-NAMESPACES="default app backend"          # Namespaces to check for dynamic pod logs
-PATTERNS="${1:-error|timeout}"            # Pipe-separated list of patterns
-THRESHOLD=3                               # Minimum occurrences (per pattern) to log
-BASE_LOG_DIR="/wrkdata"                   # Root directory for pod logs
-OFFSET_DIR="/var/log/k8s_log_offsets"     # Stores byte offsets per log file
-OUTPUT_LOG=""                             # Empty -> always print to stdout; set path to log to file
-SPECIAL_LOG_PATHS=""                      # Space-separated absolute paths to extra log files
+NAMESPACES="default app backend"
+PATTERNS="${1:-error|timeout}"
+THRESHOLD=3
+BASE_LOG_DIR="/wrkdata"
+OFFSET_DIR="/var/log/k8s_log_offsets"
+OUTPUT_LOG=""
+SPECIAL_LOG_PATHS=""
 # ----------------------------------------------------------------------------
 
-# Create offset directory if missing
 if [ ! -d "$OFFSET_DIR" ]; then
     mkdir -p "$OFFSET_DIR" || exit 1
 fi
+
+MANIFEST_FILE="$OFFSET_DIR/manifest.txt"
 
 # ----------------------------- Helper functions ------------------------------
 get_pod_log_path() {
@@ -40,10 +37,21 @@ get_pod_log_path() {
 }
 
 get_offset_file() {
-    echo "$OFFSET_DIR/$(printf "%s" "$1" | sha256sum | cut -d' ' -f1).off"
+    log_file="$1"
+    hash=$(printf "%s" "$log_file" | sha256sum | cut -d' ' -f1)
+    echo "$OFFSET_DIR/$hash.off"
 }
 
-# Read new lines from a log file using saved offset
+# Update manifest if new log file is seen
+update_manifest() {
+    log_file="$1"
+    hash=$(printf "%s" "$log_file" | sha256sum | cut -d' ' -f1)
+    if ! grep -q "^$hash " "$MANIFEST_FILE" 2>/dev/null; then
+        echo "$hash $log_file" >> "$MANIFEST_FILE"
+    fi
+}
+
+# Read new lines using offset
 read_new_lines() {
     log_file="$1"
     offset_file=$(get_offset_file "$log_file")
@@ -53,11 +61,12 @@ read_new_lines() {
     current_size=$(stat -c%s "$log_file" 2>/dev/null)
     [ -z "$current_size" ] && return 1
 
-    # Log rotated -> reset offset
     [ "$current_size" -lt "$last_offset" ] && last_offset=0
 
     if [ "$current_size" -gt "$last_offset" ]; then
-        # Efficiently read from offset+1 to end
+        # First time seeing this file? update manifest
+        [ ! -f "$offset_file" ] && update_manifest "$log_file"
+        # Read new data
         tail -c +$((last_offset + 1)) "$log_file" 2>/dev/null
         echo "$current_size" > "$offset_file"
         return 0
@@ -73,22 +82,17 @@ check_log_file() {
     new_logs=$(read_new_lines "$log_file")
     [ -z "$new_logs" ] && return
 
-    # Extract all lines matching the combined patterns
     all_matches=$(printf "%s" "$new_logs" | grep -iE "$PATTERNS")
     [ -z "$all_matches" ] && return
 
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    # Split PATTERNS by '|'
     old_ifs="$IFS"; IFS='|'; set -- $PATTERNS; patterns_list="$*"; IFS="$old_ifs"
 
     if [ -z "$OUTPUT_LOG" ]; then
-        # No file logging: always print matches
         printf "[%s] %s | File: %s\n%s\n" "$timestamp" "$label" "$log_file" "$all_matches"
     else
-        # Count occurrences per pattern from the matched lines (efficient, small subset)
         threshold_reached=false
         for pat in $patterns_list; do
-            # Count lines matching this specific pattern
             count=$(printf "%s" "$all_matches" | grep -iE "$pat" | wc -l)
             if [ "$count" -ge "$THRESHOLD" ]; then
                 threshold_reached=true
@@ -97,7 +101,6 @@ check_log_file() {
         done
         if [ "$threshold_reached" = true ]; then
             printf "[%s] %s | File: %s\n%s\n" "$timestamp" "$label" "$log_file" "$all_matches" >> "$OUTPUT_LOG"
-            # Optional: per-pattern summary
             for pat in $patterns_list; do
                 count=$(printf "%s" "$all_matches" | grep -iE "$pat" | wc -l)
                 [ "$count" -ge "$THRESHOLD" ] && printf "[%s] THRESHOLD_REACHED: pattern '%s' appeared %d times (threshold=%d) in %s | File: %s\n" "$timestamp" "$pat" "$count" "$THRESHOLD" "$label" "$log_file" >> "$OUTPUT_LOG"
@@ -106,7 +109,7 @@ check_log_file() {
     fi
 }
 
-# ----------------------------- Dynamic pod logs -------------------------------
+# ----------------------------- Main loops ------------------------------------
 check_pod_logs() {
     for ns in $NAMESPACES; do
         kubectl get namespace "$ns" >/dev/null 2>&1 || {
@@ -122,13 +125,11 @@ check_pod_logs() {
     done
 }
 
-# ----------------------------- Special static logs ----------------------------
 check_special_logs() {
     for log_file in $SPECIAL_LOG_PATHS; do
         [ -f "$log_file" ] && check_log_file "$log_file" "Log with path: $log_file"
     done
 }
 
-# ----------------------------- Main -------------------------------------------
 check_pod_logs
 check_special_logs
