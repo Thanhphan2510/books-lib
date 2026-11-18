@@ -1,0 +1,293 @@
+0. Listen, write, read, speak, grammar
+1. Câu điều kiện
+2. Thì
+QKHT < QKD
+3. Từ loại
+TT ed : bị tác động, cảm nhận
+TT ing: tính chất, bản chất
+4. Từ nối và mệnh đề trạng ngữ
+5 Từ đồng nghĩa
+6 điền từ phù hợp 
+house arrest
+baby sitting: nghe trong
+bunk bed:
+ordinal number
+portain pen
+
+who + N danh tu
+Whom + clause ( S+V)
+Desptie + N
+Spite of + N
+Although + Clause
+ought to = should
+could always: 
+build + khoarng thoi gian
+duy nhat, dau tien , cuoi cung => chia to V
+little + ko dem duoc
+few + N so it dem duoc
+sink overflow
+https://minhcanhedu.vn/hoc/12/ky-nang/reading?view=parts
+
+
+AI======
+
+
+1. Tổng quan cấu trúc bài thi Aptis (để định hướng ôn tập)
+Aptis General gồm 5 kỹ năng, trong đó Grammar & Vocabulary (Core Test) là phần bắt buộc, đóng vai trò “nền móng” cho toàn bộ bài thi.
+
+Grammar: 25 câu trắc nghiệm, độ khó tăng dần.
+
+Vocabulary: 25 câu chia 5 phần (5 từ/phần), chủ yếu dạng word-matching (ghép từ/cụm từ), không phải trắc nghiệm A-B-C truyền thống.
+
+Thời gian Core Test: khoảng 25 phút cho 50 câu ⇒ trung bình 30 giây/câu, rất ít thời gian để suy nghĩ lại.
+
+Lưu ý chiến lược: Những câu đầu thường dễ, nên làm nhanh để dành thời gian cho câu khó về sau.
+
+2. Ngữ pháp trọng tâm (từ note + bổ sung B2)
+2.1. Câu điều kiện (Conditionals)
+Note của bạn ghi “Câu điều kiện” — cần ôn đủ 4 loại cơ bản + điều kiện hỗn hợp (mixed) + wish/if only, vì đây là điểm phân biệt B1 và B2 trong Aptis.
+
+Loại	Cấu trúc	Cách dùng chính
+Zero	If + S + V (hiện tại), S + V (hiện tại)	Sự thật hiển nhiên, quy luật
+Type 1	If + S + V (hiện tại), S + will/can/may + V	Điều kiện có thể xảy ra ở hiện tại/tương lai
+Type 2	If + S + V (quá khứ đơn), S + would/could + V	Điều kiện không có thật/khó xảy ra ở hiện tại
+Type 3	If + S + had + V3/ed, S + would have + V3/ed	Điều kiện không có thật trong quá khứ (tiếc nuối)
+Mixed	If + S + had + V3/ed, S + would + V (now) hoặc If + S + V2/ed, S + would have + V3/ed	Kết hợp quá khứ – hiện tại
+Bổ sung B2:
+
+Unless = if not: We’ll go for a walk unless it snows heavily.
+
+Wish / If only diễn tả ước muốn/tiếc nuối: I wish I had known earlier. (ước về quá khứ) ; If only I could speak French. (ước về hiện tại).
+
+Đảo ngữ điều kiện (inversion): Had I known, I would have acted differently. (thay cho If I had known) — dạng này xuất hiện ở mức B2+.
+
+Lỗi thường gặp: Dùng will trong mệnh đề if của Type 1 (sai); nhầm would và will giữa Type 1 và Type 2.
+
+2.2. Thì (Tenses) — trọng tâm: Quá khứ hoàn thành (QKHT) và Quá khứ đơn (QKD)
+Note của bạn ghi “QKHT < QKD” — đây là mối quan hệ thời gian cốt lõi:
+
+Quá khứ hoàn thành (had + V3/ed): hành động xảy ra trước một hành động/mốc thời gian khác trong quá khứ.
+
+Quá khứ đơn (V2/ed): hành động xảy ra sau hoặc tại mốc thời gian đó.
+
+Ví dụ: When I arrived at the station (QKĐ), the train had already left (QKHT).
+
+Các thì B2 cần nắm thêm trong Aptis:
+
+Hiện tại hoàn thành vs. Quá khứ đơn: Aptis rất hay kiểm tra sự khác biệt này.
+
+I have lived here for 5 years. (còn tiếp diễn / liên quan hiện tại)
+
+I lived there in 2010. (đã kết thúc, có mốc thời gian rõ)
+
+Tương lai: will / be going to / thì hiện tại tiếp diễn diễn tả kế hoạch.
+
+Quá khứ tiếp diễn: thường xuất hiện ít hơn trong Aptis.
+
+2.3. Từ loại: Tính từ đuôi -ed và -ing (Participial adjectives)
+Đây là nội dung bạn đã ghi rất đúng, cần khắc sâu vì Aptis hay hỏi chọn dạng đúng trong câu.
+
+Tính từ đuôi -ING: mô tả tính chất, bản chất của sự vật/người/vật → gây ra cảm giác đó.
+
+The film was boring. (bộ phim nhàm chán — bản chất của phim)
+
+She is an interesting person. (cô ấy là người thú vị)
+
+Tính từ đuôi -ED: mô tả cảm nhận, trạng thái bị tác động của người/vật.
+
+I was bored during the film. (tôi thấy chán — tôi bị tác động)
+
+He was interested in the offer. (anh ấy thấy hứng thú)
+
+Quy tắc nhớ nhanh:
+
+-ING = nguyên nhân gây ra cảm xúc (“makes me feel…”).
+
+-ED = cách ai đó cảm thấy (“how I feel”).
+
+2.4. Từ nối và mệnh đề trạng ngữ (Linking words & Adverbial clauses)
+Note của bạn đã liệt kê một số từ nối quan trọng. Dưới đây là bảng phân loại đầy đủ theo chức năng, kèm cấp độ B1 → B2 (vì Aptis phân biệt mức độ sử dụng connector giữa các band điểm).
+
+Chức năng	B1 (cơ bản)	B2+ (nên dùng để ghi điểm)
+Thêm thông tin	and, also	in addition, furthermore, moreover
+Tương phản / nhượng bộ	but, however	although, whereas, nevertheless, despite + N/V-ing, in spite of + N/V-ing
+Nguyên nhân	because, so	since, as a result of, owing to + N/V-ing
+Kết quả	so	therefore, consequently, as a result
+Ví dụ	for example	for instance, such as
+Mục đích	to + V	in order to + V, so as to + V, for the purpose of + V-ing
+Kết luận	in the end	to sum up, all things considered
+Các cấu trúc bạn đã ghi — cần phân biệt rõ:
+
+Despite / In spite of + N / V-ing (không dùng clause ngay sau).
+
+Despite the rain, we went out. / In spite of being tired, she finished.
+
+Although / Even though / Though + clause (S + V).
+
+Although it rained, we went out.
+
+Who + N (danh từ): who thay cho chủ ngữ chỉ người.
+
+The man who lives next door is a doctor.
+
+Whom + clause (S + V): whom thay cho tân ngữ chỉ người (trang trọng).
+
+The woman whom I met yesterday is my boss.
+
+Lỗi cần tránh: Dùng despite + clause (sai); dùng although + N (sai). Đây là bẫy rất phổ biến.
+
+2.5. Mệnh đề quan hệ (Relative clauses) — bổ sung quan trọng
+Note của bạn có nhắc who/whom nhưng cần mở rộng vì Aptis B2 kiểm tra cả defining / non-defining và whose / which / that.
+
+Đại từ	Dùng cho	Ví dụ
+who	người (chủ ngữ)	The girl who won the prize is my sister.
+whom	người (tân ngữ, trang trọng)	The doctor whom I saw was very kind.
+which	vật/sự việc	The book which I bought is interesting.
+whose	sở hữu (người/vật)	The student whose essay won is here.
+that	người/vật (defining only)	The car that he drives is old.
+Defining: thông tin thiết yếu, không có dấu phẩy. Có thể dùng that.
+
+Non-defining: thông tin bổ sung, có dấu phẩy. Không dùng that; dùng who/which.
+
+Ví dụ non-defining: My father, who is 60, still works. (nếu bỏ mệnh đề, câu vẫn đủ nghĩa).
+
+2.6. Các cấu trúc và điểm ngữ pháp bổ sung từ note (giải thích rõ hơn)
+Note của bạn có một số cụm cần làm rõ:
+
+“ought to = should”: Cả hai đều diễn tả lời khuyên. You ought to see a doctor. = You should see a doctor.
+
+“could always”: Thường dùng để đề xuất một giải pháp/ý tưởng (“luôn có thể…”).
+
+If we miss the bus, we could always take a taxi. (luôn có thể bắt taxi mà)
+
+“build + khoảng thời gian”: Note này có thể ám chỉ cấu trúc “it takes + khoảng thời gian + to V” hoặc “build up over + khoảng thời gian”. Cần hiểu là: để diễn tả thời gian cần để xây dựng/phát triển một cái gì đó, dùng take hoặc build up over time.
+
+It takes two years to build this bridge.
+
+She built up her confidence over several months.
+
+“duy nhất, đầu tiên, cuối cùng ⇒ chia to V”: Đây là quy tắc khi danh từ được bổ nghĩa bởi the first / the last / the only / the best thường dùng to-infinitive.
+
+He was the first person to arrive.
+
+This is the only way to solve the problem.
+
+“little + không đếm được” / “few + đếm được (số ít?”): Cần sửa lại cho chính xác:
+
+little + N không đếm được (ít, không đủ) ; a little + N không đếm được (một ít, đủ dùng).
+
+few + N đếm được số nhiều (ít, không đủ) ; a few + N đếm được số nhiều (một vài, đủ dùng).
+
+There is little water left. (không đếm được)
+
+There are few books on the shelf. (đếm được số nhiều)
+
+“sink overflow”: Đây là cụm từ vựng chủ đề nhà cửa/đời sống — the sink overflowed (bồn rửa tràn nước). Cần nhớ dạng quá khứ overflowed và nghĩa “tràn ra”.
+
+3. Từ vựng (Vocabulary) — hệ thống theo dạng bài Aptis
+Aptis Vocabulary không chỉ hỏi nghĩa đơn thuần mà kiểm tra 5 dạng:
+
+Từ đồng nghĩa (synonyms)
+
+Định nghĩa (definitions)
+
+Dùng từ trong ngữ cảnh (word usage)
+
+Collocations (ghép từ tự nhiên)
+
+Collocations nâng cao (phân biệt B1/B2)
+
+3.1. Từ vựng từ note của bạn (cần học kỹ nghĩa + collocation)
+Từ/cụm	Nghĩa	Ghi chú
+house arrest	quản thúc tại gia	be under house arrest
+baby-sitting	trông trẻ	do baby-sitting / babysit (v)
+bunk bed	giường tầng	thường gặp trong chủ đề nhà ở/du lịch
+ordinal number	số thứ tự	first, second, third…
+fountain pen	bút máy	(note ghi portain pen — có thể là fountain pen)
+3.2. Collocations trọng tâm B2 (rất hay thi Aptis)
+Học theo verb + noun và adjective + noun vì Aptis hỏi dạng ghép từ.
+
+make: make a decision, make progress, make an effort, make a mistake
+
+do: do research, do homework, do the housework, do an experiment
+
+take: take responsibility, take advantage of, take part in, take notes
+
+have: have an impact, have access to, have a conversation
+
+reach: reach a conclusion, reach an agreement, reach a decision
+
+meet: meet a deadline, meet expectations, meet a requirement
+
+run: run a business, run out of (hết), run a risk
+
+Collocation nâng cao (B2):
+
+raise awareness (nâng cao nhận thức)
+
+conduct research (tiến hành nghiên cứu)
+
+submit an assignment (nộp bài tập)
+
+artificial intelligence (trí tuệ nhân tạo)
+
+renewable energy (năng lượng tái tạo)
+
+3.3. Phrasal verbs thường gặp trong Aptis B2
+carry out = thực hiện (kế hoạch, nghiên cứu)
+
+come up with = nghĩ ra (ý tưởng, giải pháp)
+
+deal with = giải quyết, đối phó
+
+put off = trì hoãn
+
+turn down = từ chối
+
+bring up = nuôi dưỡng / nêu ra (vấn đề)
+
+call off = hủy
+
+find out = tìm ra, phát hiện
+
+3.4. Từ vựng theo chủ đề “ngôi sao” trong Aptis
+Nên học theo 5 chủ đề lặp lại nhiều nhất: Work & Education, Travel, Health, Technology, Environment.
+
+Chủ đề	Từ khóa B2 nên nhớ
+Work & Education	deadline, degree, scholarship, drop out, sign up for, internship, promotion
+Travel	accommodation, destination, delay, check-in, get around, itinerary, jet lag
+Health	symptoms, treatment, recovery, balanced diet, mental health
+Technology	software update, internet connection, device, data, online platform
+Environment	renewable energy, recycle waste, environmentally friendly, climate change
+4. Các điểm ngữ pháp B2 bổ sung (chưa có trong note nhưng rất nên ôn)
+Vì bạn đang luyện B2, note buổi 1 của bạn thiếu một số mảng mà Aptis B2 rất hay kiểm tra:
+
+Bị động (Passive voice): đặc biệt bị động với modal và thì hoàn thành.
+
+The report must be submitted by Friday.
+
+The building has been renovated recently.
+
+Câu tường thuật (Reported speech): lùi thì, đổi đại từ, đổi trạng từ thời gian/nơi chốn.
+
+Đảo ngữ (Inversion) ở B2: Not only… but also…, Hardly had… when…, No sooner… than… — dùng để nhấn mạnh, là điểm cộng khi làm bài viết/nói.
+
+Câu chẻ (Cleft sentences): It was John who broke the window. / What I need is a holiday. — dùng để nhấn mạnh thông tin.
+
+Mạo từ (Articles): a/an/the và zero article — Aptis có thể hỏi trong phần grammar.
+
+So sánh (Comparatives/Superlatives): đặc biệt so sánh kép the more… the more… và as… as….
+
+5. Tóm tắt “ checklist” buổi 1 → cần bổ sung gì?
+Nội dung trong note	Đã đủ?	Cần bổ sung/thêm
+Câu điều kiện	Mới ghi tên	Ôn 4 loại + mixed + wish/if only + đảo ngữ
+Thì QKHT < QKĐ	Đúng hướng	Thêm hiện tại hoàn thành vs QKĐ, tương lai
+Tính từ -ed/-ing	Đúng	Thêm ví dụ và quy tắc nhớ
+Từ nối & mệnh đề trạng ngữ	Có liệt kê	Phân loại theo chức năng, cấp B1→B2
+Từ đồng nghĩa	Có	Học theo collocation & topic thay vì từ đơn
+Điền từ phù hợp	Có	Luyện dạng word-matching 5 phần của Aptis
+who/whom	Có	Thêm whose, which, that; defining/non-defining
+Despite/Although	Có	Phân biệt + N vs + clause
+ought to / could always	Có	Hiểu đúng ngữ cảnh khuyên/đề xuất
+little/few	Ghi chưa chính xác	Sửa thành little + không đếm được; few + đếm được số nhiều
+Từ vựng lẻ	Có	Gom theo chủ đề + collocation + phrasal verbs
